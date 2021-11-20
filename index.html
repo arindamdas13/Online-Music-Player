@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" integrity="sha512-PgQMlq+nqFLV4ylk1gwUOgm6CtIIXkKwaIHp/PAIWHzig/lKZSEGKEysh0TCVbHJXCLN7WetD8TFecIky75ZfQ==" crossorigin="anonymous" />
+	<link rel="stylesheet" type="text/css" href="style.css">
+	
+	<title>Online Music Player</title>
+
+</head>
+<body>
+<div class="main_div">
+	<div class="music_container">
+		<h2 id="title">Thodi Jagah</h2>
+		<h3 id="artist">Arijit Singh</h3>
+		<div class="img_container">
+			<img src="img/101.jpg"> 
+		</div>
+		<audio src="music/101.mp3"></audio>
+		<!--PROGRESS-->
+		<div class="progressbar_container" id="progress_container">
+			<div class="progress_duration_meter">
+				<div id="current_time">0:00</div>
+				<div id="duration">4:44</div>
+			</div>
+			<div class="progress_div" id="progress_div">
+				<div class="progress" id="progress"></div>
+			</div>
+		</div>
+		<div class="music_controls">
+			<i class="fas fa-backward" id="prev" title="Previous"></i>
+			<i class="fas fa-play main_button" id="play" title="Play"></i>
+			<i class="fas fa-forward" id="next" title="Next"></i>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+const music=document.querySelector("audio");
+const img=document.querySelector("img");	
+const play=document.getElementById("play");
+const artest=document.getElementById("artist");
+const title=document.getElementById("title");
+const prev=document.getElementById("prev");
+const next=document.getElementById("next");
+
+let progress=document.getElementById("progress");
+let total_duration=document.getElementById("duration");
+let current_time=document.getElementById("current_time");
+const progress_div=document.getElementById("progress_div");
+
+//data cont
+const songs=[
+{
+	name:"101",
+	title:"Thodi Jagah",
+	artist:"Arijit Singh"
+},
+{
+	name:"102",
+	title:"Aey Zindagi",
+	artist:"Aima Baig & Nabeel Shaukat Ali"
+},
+{
+	name:"103",
+	title:"Chale aana ",
+	artist:"Armaan Malik"
+},
+{
+	name:"104",
+	title:"Uska Hi Banana",
+	artist:"Arijit Singh"
+},
+{
+	name:"105",
+	title:"Dance Monkey",
+	artist:"Tones and I"
+},
+{
+	name:"106",
+	title:"Tum Se",
+	artist:"Jubin Nautiyal"
+},
+{
+	name:"107",
+	title:"Tapu Tupur",
+	artist:"Arnab Dutta"
+},
+{
+	name:"108",
+	title:"Main Tumhara",
+	artist:"Jonita Gandhi & Hriday Gattani"
+},
+{
+	name:"109",
+	title:"Mera Pyar Tera Pyar",
+	artist:"Arijit Singh"
+},
+{
+	name:"110",
+	title:"Lal Shari Poriya Konna",
+	artist:"Babul Kishor"
+},
+{
+	name:"111",
+	title:"O Khuda",
+	artist:"Amaal Malik & Palak Muchhal"
+},
+{
+	name:"112",
+	title:"ZARA ZARA X Cradles",
+	artist:"Saurabh Gosavi"
+},
+{
+	name:"113",
+	title:"Takla",
+	artist:"Subhro Raha"
+},
+{
+	name:"114",
+	title:"Tera Ghata",
+	artist:"Gajendra Verma"
+},
+{
+	name:"115",
+	title:"Tum Hi Aana",
+	artist:"Jubin Nautiyal"
+},
+
+];
+
+
+
+
+let isplaying=false;
+
+//play fun
+const playMusic =() => {
+	isplaying=true;
+	music.play();
+	play.classList.replace("fa-play" , "fa-pause");
+	img.classList.add("anime");
+};
+
+//pause fun
+const pauseMusic = () => {
+	isplaying=false;
+	music.pause();
+	play.classList.replace("fa-pause","fa-play");
+	img.classList.remove("anime");
+};
+
+
+play.addEventListener("click",() =>{
+	if(isplaying){
+		pauseMusic();
+	}
+
+	else{
+		playMusic();
+	}
+});
+
+//data change
+const loadSong=(songs) =>{
+	title.textContent=songs.title;
+	artist.textContent=songs.artist;
+	music.src="music/"+songs.name+".mp3";
+	img.src="img/"+songs.name+".jpg";
+};
+songindex=0;
+//loadSong(songs[2]);
+
+const nextSong=() =>{
+	songindex=(songindex+1)% songs.length;
+	loadSong(songs[songindex]);
+	playMusic();
+};
+
+const prevSong=() =>{
+	songindex=(songindex-1+songs.length)%songs.length;
+	loadSong(songs[songindex]);
+	playMusic();
+};
+
+//progress
+music.addEventListener('timeupdate',(event)=>{
+	//log event
+	const{currentTime,duration}=event.srcElement;
+	//console.log(currentTime);
+	//console.log(duration);
+
+	let progress_time=(currentTime/duration)*100;
+	//console.log(progress_time);
+	progress.style.width=`${progress_time}% `;
+
+	let min_duration=Math.floor(duration/60);
+	let sec_duration=Math.floor(duration%60);
+	//console.log(min_duration);
+	//console.log(sec_duration);
+	let tot_duration=`${min_duration}:${sec_duration}`;
+	if (duration) {
+	total_duration.textContent=`${tot_duration}`;
+}
+
+
+//currentTime update
+let min_currentTime=Math.floor(currentTime/60);
+	let sec_currentTime=Math.floor(currentTime%60);
+	console.log(min_currentTime);
+	console.log(sec_currentTime);
+	
+	if (sec_currentTime<10) {
+sec_currentTime=`0${sec_currentTime}`;
+}
+let tot_currentTime=`${min_currentTime}:${sec_currentTime}`;
+current_time.textContent=`${tot_currentTime}`;
+});
+
+//progress onclick
+progress_div.addEventListener("click",(event)=>{
+	const{duration}=music;
+	let move_progress=(event.offsetX / event.srcElement.clientWidth)*duration;
+	console.log(move_progress);
+	console.log(duration);
+
+	music.currentTime=move_progress;
+});
+
+//next song fun
+music.addEventListener("ended",nextSong);
+next.addEventListener("click",nextSong);
+prev.addEventListener("click",prevSong);
+
+
+</script>
+</body>
+</html>
