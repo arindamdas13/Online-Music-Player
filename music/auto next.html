@@ -1,0 +1,32 @@
+<!DOCTYPE html> 
+<html> 
+<body> 
+
+<audio controls id="au" autoplay="autoplay">
+  <source src="101.mp3" type="audio/mpeg">
+  Your browser does not support this audio format.
+</audio>
+
+<script> 
+var c=0;
+var songs = ["101.mp3", "102.mp3", "103.mp3","104.mp3", "105.mp3", "106.mp3","107.mp3", "108.mp3", "109.mp3","110.mp3", "111.mp3", "112.mp3","113.mp3", "114.mp3", "115.mp3"];
+
+var a=document.getElementById("au");
+a.addEventListener('ended', function(){
+
+document.getElementById("au").src=songs[c]; 
+a.load();  
+console.log(c); 
+c++;
+
+if(c>=songs.length){
+    c=0;
+}
+
+});
+
+</script> 
+
+
+</body> 
+</html>
